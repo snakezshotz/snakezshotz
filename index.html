@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>snakezshotz</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      /* Расширенная цветовая палитра */
+      --minecraft: #4caf50;
+      --roblox: #e91e63;
+      --dota2: #f44336;
+      --genshin: #2196f3;
+      --gta: #ff9800;
+      --slime: #ff4081;
+      --hollow: #9c27b0;
+      --phasmo: #3f51b5;
+      --terraria: #ff5722;
+      --binding: #673ab7;
+      --anime-pink: #ff6b8b;
+      --online-green: #10b981;
+      
+      /* Градиенты */
+      --gradient-primary: linear-gradient(135deg, #6366f1, #8b5cf6);
+      --gradient-gamer: linear-gradient(135deg, #4caf50, #2196f3, #e91e63);
+      --gradient-dark: linear-gradient(135deg, #0f172a, #1e293b);
+      --gradient-card: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+      
+      /* Основные цвета */
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --dark: #0f172a;
+      --darker: #020617;
+      --light: #f8fafc;
+      --gray: #94a3b8;
+      --surface: rgba(30, 41, 59, 0.8);
+      --card: rgba(30, 41, 59, 0.95);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--gradient-dark);
+      color: var(--light);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Фоновые узоры */
+    .bg-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(233, 30, 99, 0.1) 0%, transparent 40%),
+        linear-gradient(135deg, transparent 60%, rgba(76, 175, 80, 0.05) 100%);
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    /* Частицы с улучшенной анимацией */
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      filter: blur(0.5px);
+      animation: floatParticle linear infinite;
+    }
+
+    @keyframes floatParticle {
+      0% { 
+        transform: translateY(100vh) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% { opacity: 0.3; }
+      90% { opacity: 0.3; }
+      100% { 
+        transform: translateY(-100px) translateX(100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Контейнер */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Навигация */
+    .nav-indicator {
+      position: fixed;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      opacity: 0.5;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .nav-indicator:hover {
+      opacity: 1;
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .nav-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gray);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+      border: 2px solid transparent;
+    }
+
+    .nav-dot.active {
+      background: var(--primary);
+      transform: scale(1.4);
+      box-shadow: 
+        0 0 15px var(--primary),
+        0 0 30px rgba(99, 102, 241, 0.3);
+      border-color: white;
+    }
+
+    .nav-dot:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      right: 25px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(15, 23, 42, 0.95);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-50%) translateX(10px); }
+      to { opacity: 1; transform: translateY(-50%) translateX(0); }
+    }
+
+    /* Хедер профиля */
+    .profile-header {
+      background: var(--gradient-card);
+      border-radius: 30px;
+      padding: 50px;
+      margin-bottom: 50px;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(30px);
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 1px 3px rgba(255, 255, 255, 0.1);
+      animation: floatUp 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes floatUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .profile-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, 
+        var(--minecraft),
+        var(--roblox),
+        var(--dota2),
+        var(--genshin),
+        var(--primary));
+      background-size: 300% 100%;
+      animation: borderFlow 4s linear infinite;
+    }
+
+    @keyframes borderFlow {
+      0% { background-position: 300% 0; }
+      100% { background-position: -300% 0; }
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      position: relative;
+      z-index: 2;
+    }
+
+    @media (max-width: 900px) {
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 35px;
+      }
+    }
+
+    /* Аватарка */
+    .avatar-wrapper {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      flex-shrink: 0;
+    }
+
+    .avatar-frame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 30px;
+      padding: 10px;
+      background: linear-gradient(45deg, 
+        var(--minecraft),
+        var(--roblox),
+        var(--dota2),
+        var(--genshin),
+        var(--primary));
+      background-size: 400% 400%;
+      animation: frameGlow 6s ease infinite;
+      box-shadow: 
+        0 0 60px rgba(99, 102, 241, 0.5),
+        0 0 120px rgba(76, 175, 80, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      z-index: 2;
+    }
+
+    @keyframes frameGlow {
+      0%, 100% { 
+        background-position: 0% 50%;
+        box-shadow: 
+          0 0 60px rgba(99, 102, 241, 0.5),
+          0 0 120px rgba(76, 175, 80, 0.3);
+      }
+      25% { 
+        background-position: 100% 50%;
+        box-shadow: 
+          0 0 60px rgba(233, 30, 99, 0.5),
+          0 0 120px rgba(244, 67, 54, 0.3);
+      }
+      50% { 
+        background-position: 50% 100%;
+        box-shadow: 
+          0 0 60px rgba(244, 67, 54, 0.5),
+          0 0 120px rgba(33, 150, 243, 0.3);
+      }
+      75% { 
+        background-position: 0% 100%;
+        box-shadow: 
+          0 0 60px rgba(33, 150, 243, 0.5),
+          0 0 120px rgba(99, 102, 241, 0.3);
+      }
+    }
+
+    .avatar-container {
+      width: 100%;
+      height: 100%;
+      border-radius: 25px;
+      overflow: hidden;
+      background: rgba(15, 23, 42, 0.8);
+      border: 3px solid rgba(255, 255, 255, 0.15);
+      position: relative;
+      z-index: 3;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .avatar-container:hover {
+      transform: scale(1.05);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: all 0.7s ease;
+      filter: brightness(0.9) contrast(1.1) saturate(1.1);
+    }
+
+    .avatar:hover {
+      transform: scale(1.1);
+      filter: brightness(1) contrast(1.2) saturate(1.3);
+    }
+
+    .profile-info {
+      flex: 1;
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      margin-bottom: 20px;
+      background: var(--gradient-gamer);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: textShine 3s ease-in-out infinite alternate;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      letter-spacing: -0.5px;
+    }
+
+    @keyframes textShine {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    /* Теги профиля */
+    .profile-tags {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .profile-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: 25px;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      transition: all 0.3s ease;
+      font-weight: 500;
+      font-size: 0.95rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .profile-tag:hover {
+      background: rgba(99, 102, 241, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+    }
+
+    .profile-tag i {
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    /* Статус */
+    .status-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, 
+        rgba(16, 185, 129, 0.2),
+        rgba(16, 185, 129, 0.1));
+      border-radius: 25px;
+      font-weight: 600;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      margin-bottom: 25px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 5px 15px rgba(16, 185, 129, 0.1);
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--online-green);
+      box-shadow: 
+        0 0 15px var(--online-green),
+        0 0 30px rgba(16, 185, 129, 0.3);
+      position: relative;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    .profile-description {
+      color: var(--gray);
+      line-height: 1.8;
+      margin-top: 25px;
+      max-width: 650px;
+      font-size: 1.05rem;
+    }
+
+    .profile-description p {
+      margin-bottom: 18px;
+    }
+
+    /* Основные секции */
+    .section {
+      background: var(--gradient-card);
+      border-radius: 25px;
+      padding: 40px;
+      margin-bottom: 35px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(30px);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .section:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--section-color, var(--primary)), transparent 80%);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 35px;
+      padding-bottom: 25px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .section-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--section-color, var(--primary)), color-mix(in srgb, var(--section-color, var(--primary)) 70%, white));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.8rem;
+      box-shadow: 
+        0 10px 30px rgba(var(--section-rgb, 99, 102, 241), 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .section:hover .section-icon {
+      transform: rotate(10deg) scale(1.1);
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, 
+        var(--light),
+        color-mix(in srgb, var(--light) 70%, var(--section-color, var(--primary))));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    /* Информационные карточки */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 35px;
+    }
+
+    .info-card {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08),
+        rgba(255, 255, 255, 0.03));
+      border-radius: 20px;
+      padding: 30px;
+      border-left: 5px solid var(--info-color, var(--primary));
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+    }
+
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, 
+        rgba(var(--info-rgb, 99, 102, 241), 0.1),
+        transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .info-card:hover::before {
+      opacity: 1;
+    }
+
+    .info-card:hover {
+      transform: translateY(-8px);
+      border-left-width: 8px;
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.25),
+        0 0 40px rgba(var(--info-rgb, 99, 102, 241), 0.15);
+    }
+
+    .info-label {
+      color: var(--gray);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 700;
+    }
+
+    .info-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--light);
+      line-height: 1.3;
+    }
+
+    .age-display {
+      font-size: 4rem;
+      font-weight: 900;
+      background: var(--gradient-gamer);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      margin: 20px 0;
+      text-shadow: 0 0 40px rgba(99, 102, 241, 0.4);
+      animation: textShine 4s ease-in-out infinite alternate;
+    }
+
+    /* Игровая статистика */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, 
+        rgba(var(--stat-rgb, 99, 102, 241), 0.15),
+        rgba(var(--stat-rgb, 99, 102, 241), 0.08));
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      border: 1px solid rgba(var(--stat-rgb, 99, 102, 241), 0.3);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, 
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent);
+      transform: rotate(45deg);
+      transition: transform 0.6s ease;
+    }
+
+    .stat-card:hover::after {
+      transform: rotate(45deg) translate(20%, 20%);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-10px);
+      border-color: rgba(var(--stat-rgb, 99, 102, 241), 0.5);
+      box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.3),
+        0 0 50px rgba(var(--stat-rgb, 99, 102, 241), 0.2);
+    }
+
+    .stat-number {
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin-bottom: 10px;
+      font-family: 'Courier New', 'JetBrains Mono', monospace;
+      color: rgba(var(--stat-rgb, 99, 102, 241), 1);
+      text-shadow: 0 0 20px rgba(var(--stat-rgb, 99, 102, 241), 0.5);
+    }
+
+    /* Игровые карточки */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+    }
+
+    .game-card {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08),
+        rgba(255, 255, 255, 0.03));
+      border-radius: 22px;
+      padding: 35px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, 
+        var(--game-color, var(--primary)),
+        color-mix(in srgb, var(--game-color, var(--primary)) 30%, transparent),
+        transparent);
+      background-size: 200% 100%;
+      animation: gameBorder 4s linear infinite;
+    }
+
+    @keyframes gameBorder {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .game-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, 
+        rgba(var(--game-rgb, 99, 102, 241), 0.05),
+        transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .game-card:hover::after {
+      opacity: 1;
+    }
+
+    .game-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.3),
+        0 0 40px rgba(var(--game-rgb, 99, 102, 241), 0.25);
+    }
+
+    .game-header {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      margin-bottom: 25px;
+    }
+
+    .game-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--game-color, var(--primary)), color-mix(in srgb, var(--game-color, var(--primary)) 70%, white));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      box-shadow: 
+        0 10px 30px rgba(var(--game-rgb, 99, 102, 241), 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      flex-shrink: 0;
+      transition: transform 0.4s ease;
+    }
+
+    .game-card:hover .game-icon {
+      transform: rotate(15deg) scale(1.1);
+    }
+
+    .game-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--light);
+      margin-bottom: 5px;
+    }
+
+    .game-subtitle {
+      color: var(--gray);
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    /* ИСПРАВЛЕННЫЕ Прогресс-бары с ФИКСИРОВАННОЙ ДЛИТЕЛЬНОСТЬЮ */
+    .progress-wrapper {
+      margin-top: 25px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .progress-label {
+      color: var(--gray);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .progress-value {
+      color: var(--game-color, var(--primary));
+      font-weight: 700;
+      font-size: 1.1rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, 
+        var(--game-color, var(--primary)),
+        color-mix(in srgb, var(--game-color, var(--primary)) 70%, white));
+      border-radius: 6px;
+      position: relative;
+      width: 0%; /* НАЧАЛЬНОЕ ЗНАЧЕНИЕ 0% */
+      transition: width 2.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* УВЕЛИЧИЛИ ВРЕМЯ */
+    }
+
+    /* Добавим псевдоэлемент для анимации блеска */
+    .progress-fill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, 
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent);
+      animation: progressShine 3s infinite linear;
+      transform: translateX(-100%);
+    }
+
+    @keyframes progressShine {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    .progress-fill.loaded {
+      width: var(--progress-width, 0%);
+    }
+
+    /* Теги */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+    .tag {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.05));
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.3s ease;
+      cursor: default;
+      color: var(--light);
+      backdrop-filter: blur(10px);
+    }
+
+    .tag:hover {
+      transform: translateY(-4px) scale(1.05);
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.15),
+        rgba(255, 255, 255, 0.1));
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 
+        0 10px 25px rgba(0, 0, 0, 0.2),
+        0 0 20px rgba(99, 102, 241, 0.15);
+    }
+
+    /* Контакты */
+    .contacts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+    }
+
+    .contact-card {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08),
+        rgba(255, 255, 255, 0.03));
+      border-radius: 22px;
+      padding: 35px;
+      text-decoration: none;
+      color: var(--light);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+    }
+
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.08),
+        transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .contact-card:hover::before {
+      opacity: 1;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-12px);
+      border-color: var(--primary);
+      box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.3),
+        0 0 50px rgba(99, 102, 241, 0.25);
+    }
+
+    .contact-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      flex-shrink: 0;
+      box-shadow: 
+        0 12px 35px rgba(99, 102, 241, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: transform 0.4s ease;
+    }
+
+    .contact-card:hover .contact-icon {
+      transform: rotate(15deg) scale(1.1);
+    }
+
+    .contact-info {
+      flex: 1;
+    }
+
+    .contact-name {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--light);
+    }
+
+    .contact-handle {
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .contact-description {
+      color: var(--gray);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Временная секция */
+    .time-section {
+      background: linear-gradient(135deg, 
+        rgba(30, 41, 59, 0.95),
+        rgba(15, 23, 42, 0.98));
+      border-radius: 25px;
+      padding: 50px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(30px);
+    }
+
+    .time-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, 
+        var(--minecraft),
+        var(--roblox),
+        var(--dota2),
+        var(--genshin));
+      background-size: 300% 100%;
+      animation: borderFlow 4s linear infinite;
+    }
+
+    .time-display {
+      font-size: 5rem;
+      font-weight: 900;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      background: var(--gradient-gamer);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+      text-shadow: 0 0 40px rgba(99, 102, 241, 0.4);
+      letter-spacing: 3px;
+      animation: textShine 3s ease-in-out infinite alternate;
+    }
+
+    .timezone-info {
+      color: var(--gray);
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      font-weight: 500;
+    }
+
+    .update-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 15px 30px;
+      border-radius: 50px;
+      color: var(--gray);
+      font-size: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+    }
+
+    /* Кнопка возврата наверх */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: var(--gradient-primary);
+      border-radius: 20px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.3rem;
+      text-decoration: none;
+      box-shadow: 
+        0 8px 30px rgba(99, 102, 241, 0.5),
+        0 2px 8px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateY(30px) scale(0.8);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 1000;
+      cursor: pointer;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-10px) scale(1.1);
+      box-shadow: 
+        0 15px 40px rgba(99, 102, 241, 0.7),
+        0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Анимации появления */
+    .animate-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .animate-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Адаптивность */
+    @media (max-width: 1024px) {
+      .container {
+        padding: 15px;
+      }
+      
+      .profile-header {
+        padding: 40px 30px;
+      }
+      
+      h1 {
+        font-size: 3rem;
+      }
+      
+      .time-display {
+        font-size: 4rem;
+      }
+      
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-indicator {
+        display: none;
+      }
+      
+      .profile-header {
+        padding: 30px 20px;
+        margin-bottom: 30px;
+      }
+      
+      .header-content {
+        gap: 25px;
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .avatar-wrapper {
+        width: 220px;
+        height: 220px;
+      }
+      
+      .section {
+        padding: 30px 20px;
+        margin-bottom: 25px;
+      }
+      
+      .section-title {
+        font-size: 1.8rem;
+      }
+      
+      .section-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+      }
+      
+      .time-display {
+        font-size: 3rem;
+      }
+      
+      .stat-number {
+        font-size: 2.5rem;
+      }
+      
+      .age-display {
+        font-size: 3rem;
+      }
+      
+      .contacts-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .contact-card {
+        padding: 25px;
+      }
+      
+      .game-card {
+        padding: 25px;
+      }
+      
+      .back-to-top {
+        width: 50px;
+        height: 50px;
+        bottom: 20px;
+        right: 20px;
+        border-radius: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .profile-header {
+        padding: 25px 15px;
+        border-radius: 20px;
+      }
+      
+      .avatar-wrapper {
+        width: 180px;
+        height: 180px;
+      }
+      
+      .section {
+        padding: 25px 15px;
+        border-radius: 20px;
+      }
+      
+      .section-title {
+        font-size: 1.5rem;
+      }
+      
+      .time-display {
+        font-size: 2.5rem;
+        letter-spacing: 1px;
+      }
+      
+      .timezone-info {
+        font-size: 1rem;
+      }
+      
+      .stat-number {
+        font-size: 2rem;
+      }
+      
+      .age-display {
+        font-size: 2.5rem;
+      }
+      
+      .contact-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+      }
+      
+      .contact-name {
+        font-size: 1.3rem;
+      }
+      
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-pattern"></div>
+  <div class="particles-container" id="particles"></div>
+  
+  <!-- Навигация по секциям -->
+  <div class="nav-indicator" id="navIndicator">
+    <div class="nav-dot active" data-tooltip="Главная" onclick="scrollToSection('profile')"></div>
+    <div class="nav-dot" data-tooltip="Обо мне" onclick="scrollToSection('about')"></div>
+    <div class="nav-dot" data-tooltip="Статистика" onclick="scrollToSection('stats')"></div>
+    <div class="nav-dot" data-tooltip="Интересы" onclick="scrollToSection('interests')"></div>
+    <div class="nav-dot" data-tooltip="Контакты" onclick="scrollToSection('contacts')"></div>
+  </div>
+  
+  <div class="container">
+    <!-- Профиль -->
+    <div class="profile-header animate-in" id="profile">
+      <div class="header-content">
+        <div class="avatar-wrapper">
+          <div class="avatar-frame"></div>
+          <div class="avatar-container">
+            <img src="avatar.jpg" alt="snakezshotz" class="avatar" 
+                 onerror="this.onerror=null; this.src='https://i.imgur.com/placeholder-avatar.jpg'">
+          </div>
+        </div>
+        
+        <div class="profile-info">
+          <h1>snakezshotz</h1>
+          
+          <div class="profile-tags">
+            <div class="profile-tag">
+              <i class="fas fa-gamepad"></i>
+              <span>Геймер</span>
+            </div>
+            <div class="profile-tag">
+              <i class="fas fa-code"></i>
+              <span>Программист</span>
+            </div>
+            <div class="profile-tag">
+              <i class="fas fa-palette"></i>
+              <span>Дизайнер</span>
+            </div>
+            <div class="profile-tag">
+              <i class="fas fa-music"></i>
+              <span>Меломан</span>
+            </div>
+          </div>
+          
+          <div class="status-wrapper">
+            <div class="status-dot"></div>
+            <span>Онлайн • занят</span>
+          </div>
+          
+          <div class="profile-description">
+            <p>Привет! Меня зовут snakezshotz. Я начинающий программист и дизайнер, увлеченный играми с 8 лет. Люблю создавать что-то новое и разбираться в технологиях. В свободное время играю, смотрю аниме и работаю над своими проектами.</p>
+            <p>В играх провел около 95,000 часов, больше всего времени в Minecraft и Roblox. Люблю аниме, хорошую музыку и креативные проекты. Всегда открыт для интересных коллабораций и совместных проектов!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Основная информация -->
+    <div class="section animate-in" id="about" 
+         style="--section-color: var(--primary); --section-rgb: 99, 102, 241;">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <h2 class="section-title">Обо мне</h2>
+      </div>
+      
+      <div class="info-grid">
+        <div class="info-card" style="--info-color: var(--minecraft); --info-rgb: 76, 175, 80;">
+          <div class="info-label">Имя / Псевдоним</div>
+          <div class="info-value">Без имени (snakezshotz)</div>
+          <div style="color: var(--gray); font-size: 0.95rem; margin-top: 8px;">Предпочитаю не раскрывать настоящее имя</div>
+        </div>
+        
+        <div class="info-card" style="--info-color: var(--roblox); --info-rgb: 233, 30, 99;">
+          <div class="info-label">Местоимения</div>
+          <div class="info-value">Он/Его</div>
+          <div style="color: var(--gray); font-size: 0.95rem; margin-top: 8px;"><span id="age">18</span> лет</div>
+        </div>
+        
+        <div class="info-card" style="--info-color: var(--dota2); --info-rgb: 244, 67, 54;">
+          <div class="info-label">Возраст</div>
+          <div class="age-display" id="age-display">18</div>
+          <div class="info-value">Родился 1 апреля 2007</div>
+        </div>
+        
+        <div class="info-card" style="--info-color: var(--genshin); --info-rgb: 33, 150, 243;">
+          <div class="info-label">Локация</div>
+          <div class="info-value">Пекин, Китай</div>
+          <div style="color: var(--gray); font-size: 0.95rem; margin-top: 8px;">Часовой пояс: UTC+8 (MSK+5)</div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 35px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+          <div class="info-card" style="--info-color: var(--roblox); --info-rgb: 233, 30, 99;">
+            <div class="info-label">Нравится</div>
+            <div style="color: var(--gray); font-size: 1rem; line-height: 1.6;">
+              • Игры и игровая разработка<br>
+              • Аниме и японская культура<br>
+              • Программирование и дизайн<br>
+              • Музыка (саундтреки, электроника)<br>
+              • Творческие проекты и коллаборации
+            </div>
+          </div>
+          
+          <div class="info-card" style="--info-color: var(--dota2); --info-rgb: 244, 67, 54;">
+            <div class="info-label">Не нравится</div>
+            <div style="color: var(--gray); font-size: 1rem; line-height: 1.6;">
+              • Токсичность и негатив<br>
+              • Опера и тяжелый металл<br>
+              • Неуважение к личному времени<br>
+              • Плохо оптимизированные игры<br>
+              • Скучные и однообразные проекты
+            </div>
+          </div>
+        </div>
+        
+        <div class="info-card" style="margin-top: 25px; --info-color: var(--online-green); --info-rgb: 16, 185, 129;">
+          <div class="info-label">Личные сообщения</div>
+          <div style="color: var(--gray); font-size: 1rem; line-height: 1.6;">
+            🔒 Закрыты (Запечатаны печатью забвения)<br>
+            Для связи используйте контакты ниже. Отвечаю в течение 24 часов.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Игровая статистика -->
+    <div class="section animate-in" id="stats" 
+         style="--section-color: var(--minecraft); --section-rgb: 76, 175, 80;">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h2 class="section-title">Игровая статистика</h2>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card" style="--stat-rgb: 76, 175, 80;">
+          <div class="stat-number" id="totalHours">95,672ч</div>
+          <div class="info-label">Суммарное время</div>
+          <div class="info-value">≈10.8 лет игры</div>
+        </div>
+        
+        <div class="stat-card" style="--stat-rgb: 233, 30, 99;">
+          <div class="stat-number">60,000ч</div>
+          <div class="info-label">Minecraft</div>
+          <div class="info-value">С 8 лет (2015)</div>
+        </div>
+        
+        <div class="stat-card" style="--stat-rgb: 244, 67, 54;">
+          <div class="stat-number">35,000ч</div>
+          <div class="info-label">Roblox</div>
+          <div class="info-value">С 8 лет (2015)</div>
+        </div>
+        
+        <div class="stat-card" style="--stat-rgb: 33, 150, 243;">
+          <div class="stat-number">1,672ч</div>
+          <div class="info-label">Dota 2</div>
+          <div class="info-value">Только на PC</div>
+        </div>
+      </div>
+      
+      <div class="games-grid">
+        <!-- Minecraft -->
+        <div class="game-card" style="--game-color: var(--minecraft); --game-rgb: 76, 175, 80;">
+          <div class="game-header">
+            <div class="game-icon">
+              <i class="fas fa-cube"></i>
+            </div>
+            <div>
+              <div class="game-title">Minecraft</div>
+              <div class="game-subtitle">С 8 лет • Мобильный + PC • ~60,000 часов</div>
+            </div>
+          </div>
+          
+          <div class="progress-wrapper">
+            <div class="progress-info">
+              <span class="progress-label">62.7% от общего времени</span>
+              <span class="progress-value">62.7%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" data-width="62.7"></div>
+            </div>
+            <div style="margin-top: 20px; color: var(--gray); font-size: 0.95rem; line-height: 1.6;">
+              <i class="fas fa-mobile-alt" style="color: var(--minecraft); margin-right: 8px;"></i>
+              Основная игра на мобильном (8-14 лет)<br>
+              <i class="fas fa-desktop" style="color: var(--minecraft); margin-right: 8px;"></i>
+              Продолжаю играть на компьютере<br>
+              <i class="fas fa-calendar" style="color: var(--minecraft); margin-right: 8px;"></i>
+              ≈6.8 лет суммарной игры
+            </div>
+          </div>
+        </div>
+        
+        <!-- Roblox -->
+        <div class="game-card" style="--game-color: var(--roblox); --game-rgb: 233, 30, 99;">
+          <div class="game-header">
+            <div class="game-icon">
+              <i class="fas fa-gamepad"></i>
+            </div>
+            <div>
+              <div class="game-title">Roblox</div>
+              <div class="game-subtitle">С 8 лет • Мобильный + PC • ~35,000 часов</div>
+            </div>
+          </div>
+          
+          <div class="progress-wrapper">
+            <div class="progress-info">
+              <span class="progress-label">36.6% от общего времени</span>
+              <span class="progress-value">36.6%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" data-width="36.6"></div>
+            </div>
+            <div style="margin-top: 20px; color: var(--gray); font-size: 0.95rem; line-height: 1.6;">
+              <i class="fas fa-users" style="color: var(--roblox); margin-right: 8px;"></i>
+              Множество мини-игр и режимов<br>
+              <i class="fas fa-paint-brush" style="color: var(--roblox); margin-right: 8px;"></i>
+              Пробовал создавать свои игры<br>
+              <i class="fas fa-calendar" style="color: var(--roblox); margin-right: 8px;"></i>
+              ≈4.0 лет суммарной игры
+            </div>
+          </div>
+        </div>
+        
+        <!-- Dota 2 -->
+        <div class="game-card" style="--game-color: var(--dota2); --game-rgb: 244, 67, 54;">
+          <div class="game-header">
+            <div class="game-icon">
+              <i class="fab fa-steam"></i>
+            </div>
+            <div>
+              <div class="game-title">Dota 2</div>
+              <div class="game-subtitle">С 14 лет • Только PC • 1,672 часа</div>
+            </div>
+          </div>
+          
+          <div class="progress-wrapper">
+            <div class="progress-info">
+              <span class="progress-label">1.75% от общего времени</span>
+              <span class="progress-value">1.75%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" data-width="1.75"></div>
+            </div>
+            <div style="margin-top: 20px; color: var(--gray); font-size: 0.95rem; line-height: 1.6;">
+              <i class="fas fa-trophy" style="color: var(--dota2); margin-right: 8px;"></i>
+              Основная PC игра • 24.6ч за 2 недели<br>
+              <i class="fas fa-users" style="color: var(--dota2); margin-right: 8px;"></i>
+              Играю с друзьями и в команде<br>
+              <i class="fas fa-chart-line" style="color: var(--dota2); margin-right: 8px;"></i>
+              Продолжаю улучшать скилл
+            </div>
+          </div>
+        </div>
+        
+        <!-- Другие игры -->
+        <div class="game-card" style="--game-color: var(--genshin); --game-rgb: 33, 150, 243;">
+          <div class="game-header">
+            <div class="game-icon">
+              <i class="fas fa-gamepad"></i>
+            </div>
+            <div>
+              <div class="game-title">Другие игры</div>
+              <div class="game-subtitle">120+ игр в Steam • ~900 часов</div>
+            </div>
+          </div>
+          
+          <div class="progress-wrapper">
+            <div class="progress-info">
+              <span class="progress-label">0.95% от общего времени</span>
+              <span class="progress-value">0.95%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" data-width="0.95"></div>
+            </div>
+            <div style="margin-top: 20px; color: var(--gray); font-size: 0.95rem; line-height: 1.6;">
+              <i class="fas fa-list" style="color: var(--genshin); margin-right: 8px;"></i>
+              Genshin Impact, GTA V, Slime Rancher<br>
+              <i class="fas fa-layer-group" style="color: var(--genshin); margin-right: 8px;"></i>
+              Hollow Knight, Terraria, Phasmophobia<br>
+              <i class="fas fa-box" style="color: var(--genshin); margin-right: 8px;"></i>
+              И другие 117+ игр в библиотеке
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Интересы -->
+    <div class="section animate-in" id="interests" 
+         style="--section-color: var(--anime-pink); --section-rgb: 255, 107, 139;">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fas fa-heart"></i>
+        </div>
+        <h2 class="section-title">Интересы и увлечения</h2>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; margin-bottom: 35px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+            <div style="width: 55px; height: 55px; border-radius: 14px; background: linear-gradient(135deg, #ff6b8b, #ff8e53); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem;">
+              <i class="fas fa-tv"></i>
+            </div>
+            <h3 style="font-size: 1.5rem; color: var(--light);">Любимые аниме</h3>
+          </div>
+          <div class="tags-container">
+            <div class="tag" style="border-color: #ff6b8b;">Solo Leveling</div>
+            <div class="tag" style="border-color: #ff8e53;">Hunter x Hunter</div>
+            <div class="tag" style="border-color: #ff4757;">One Piece</div>
+            <div class="tag" style="border-color: #ff3838;">Attack on Titan</div>
+            <div class="tag" style="border-color: #ff9f1a;">Demon Slayer</div>
+            <div class="tag" style="border-color: #32ff7e;">One-Punch Man</div>
+            <div class="tag" style="border-color: #18dcff;">Tokyo Ghoul</div>
+            <div class="tag" style="border-color: #7d5fff;">JoJo's</div>
+            <div class="tag" style="border-color: #ffaf40;">Hell's Paradise</div>
+            <div class="tag" style="border-color: #fffa65;">Spirited Away</div>
+            <div class="tag" style="border-color: #67e6dc;">Howl's Moving Castle</div>
+            <div class="tag" style="border-color: #cd84f1;">Naruto</div>
+          </div>
+        </div>
+        
+        <div>
+          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+            <div style="width: 55px; height: 55px; border-radius: 14px; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem;">
+              <i class="fas fa-gamepad"></i>
+            </div>
+            <h3 style="font-size: 1.5rem; color: var(--light);">Любимые игры</h3>
+          </div>
+          <div class="tags-container">
+            <div class="tag" style="border-color: var(--minecraft);">Minecraft</div>
+            <div class="tag" style="border-color: var(--roblox);">Roblox</div>
+            <div class="tag" style="border-color: var(--dota2);">Dota 2</div>
+            <div class="tag" style="border-color: var(--genshin);">Genshin Impact</div>
+            <div class="tag" style="border-color: var(--gta);">GTA V</div>
+            <div class="tag" style="border-color: var(--slime);">Slime Rancher</div>
+            <div class="tag" style="border-color: var(--hollow);">Hollow Knight</div>
+            <div class="tag" style="border-color: var(--binding);">The Binding of Isaac</div>
+            <div class="tag" style="border-color: var(--terraria);">Terraria</div>
+            <div class="tag" style="border-color: var(--phasmo);">Phasmophobia</div>
+            <div class="tag" style="border-color: #ff5722;">Plants vs Zombies</div>
+            <div class="tag" style="border-color: #9c27b0;">R.E.P.O.</div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), transparent); padding: 30px; border-radius: 18px; border-left: 5px solid var(--primary); backdrop-filter: blur(20px);">
+        <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 20px;">
+          <div style="width: 60px; height: 60px; border-radius: 14px; background: linear-gradient(135deg, #9c27b0, #673ab7); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+            <i class="fas fa-music"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 1.5rem; color: var(--light); margin-bottom: 5px;">Музыкальные вкусы</h3>
+            <div style="color: var(--gray); font-size: 0.95rem;">Люблю почти любую музыку, кроме оперы и тяжелого метала</div>
+          </div>
+        </div>
+        <div style="color: var(--gray); line-height: 1.6;">
+          Особенно нравятся саундтреки из игр и аниме, электронная музыка, lo-fi, synthwave, и фоновая музыка для концентрации. Часто слушаю музыку во время программирования или работы над проектами. Создаю плейлисты под разные настроения и активности.
+        </div>
+      </div>
+    </div>
+
+    <!-- Контакты -->
+    <div class="section animate-in" id="contacts" 
+         style="--section-color: var(--primary-dark); --section-rgb: 79, 70, 229;">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fas fa-link"></i>
+        </div>
+        <h2 class="section-title">Контакты и связи</h2>
+      </div>
+      
+      <div class="contacts-grid">
+        <a href="https://discord.com/users/1014081317845082152" class="contact-card" target="_blank">
+          <div class="contact-icon">
+            <i class="fab fa-discord"></i>
+          </div>
+          <div class="contact-info">
+            <div class="contact-name">Discord</div>
+            <div class="contact-handle">.1889</div>
+            <div class="contact-description">Основное средство связи. Отвечаю, когда свободен. Лучший способ связаться для обсуждения проектов или совместной игры.</div>
+          </div>
+          <i class="fas fa-external-link-alt" style="color: var(--gray); font-size: 1.2rem;"></i>
+        </a>
+        
+        <a href="https://steamcommunity.com/profiles/76561199239698057/" class="contact-card" target="_blank">
+          <div class="contact-icon">
+            <i class="fab fa-steam"></i>
+          </div>
+          <div class="contact-info">
+            <div class="contact-name">Steam</div>
+            <div class="contact-handle">snakezshotz</div>
+            <div class="contact-description">120+ игр, 1,672ч в Dota 2. Часто онлайн. Можете написать в чат Steam или добавить в друзья для совместных игр.</div>
+          </div>
+          <i class="fas fa-external-link-alt" style="color: var(--gray); font-size: 1.2rem;"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Время -->
+    <div class="section animate-in time-section" id="time">
+      <div class="section-header" style="border-bottom: none; margin-bottom: 25px; padding-bottom: 0;">
+        <div class="section-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h2 class="section-title">Текущее время</h2>
+      </div>
+      
+      <div class="time-display" id="currentTime">00:00:00</div>
+      <div class="timezone-info" id="timezone">Пекин, Китай • UTC+8 (MSK+5)</div>
+      
+      <div class="update-indicator">
+        <i class="fas fa-sync-alt fa-spin"></i>
+        <span>Обновлено: <span id="lastUpdate">--:--:--</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Кнопка возврата наверх -->
+  <a class="back-to-top" id="backToTop">
+    <i class="fas fa-arrow-up"></i>
+  </a>
+
+  <script>
+    // Создание улучшенных частиц
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const colors = ['#4caf50', '#e91e63', '#f44336', '#2196f3', '#ff9800', '#9c27b0', '#6366f1', '#ff6b8b'];
+      
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        const size = Math.random() * 8 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.opacity = 0;
+        particle.style.animationDuration = `${Math.random() * 30 + 20}s`;
+        particle.style.animationDelay = `${Math.random() * 10}s`;
+        particle.style.animationTimingFunction = `cubic-bezier(${Math.random()}, ${Math.random()}, ${Math.random()}, ${Math.random()})`;
+        
+        container.appendChild(particle);
+      }
+    }
+
+    // Обновление времени и возраста
+    function updateTime() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('ru-RU', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+      
+      document.getElementById('currentTime').textContent = timeString;
+      document.getElementById('lastUpdate').textContent = timeString;
+      
+      // Расчет возраста
+      const birthDate = new Date('2007-04-01');
+      let age = now.getFullYear() - birthDate.getFullYear();
+      const monthDiff = now.getMonth() - birthDate.getMonth();
+      
+      if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      
+      document.getElementById('age').textContent = age;
+      document.getElementById('age-display').textContent = age;
+    }
+
+    // ИСПРАВЛЕННАЯ анимация прогресс-баров с ФИКСИРОВАННОЙ ДЛИТЕЛЬНОСТЬЮ
+    function animateProgressBars() {
+      const progressBars = document.querySelectorAll('.progress-fill');
+      
+      progressBars.forEach(bar => {
+        const targetWidth = bar.getAttribute('data-width');
+        
+        // Устанавливаем начальную ширину 0
+        bar.style.width = '0%';
+        
+        // ФИКС: Одинаковая длительность для ВСЕХ баров - 2.5 секунды
+        const duration = 2500; // 2.5 секунды для ВСЕХ
+        
+        // Используем setTimeout для простоты (вместо requestAnimationFrame)
+        // чтобы все бары анимировались одинаково долго независимо от ширины
+        let startTime = Date.now();
+        
+        function animate() {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          
+          // Кубическое easing для плавности
+          const easedProgress = 1 - Math.pow(1 - progress, 3);
+          const currentWidth = easedProgress * parseFloat(targetWidth);
+          
+          bar.style.width = `${currentWidth}%`;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            // После завершения анимации устанавливаем окончательное значение
+            bar.style.width = `${targetWidth}%`;
+          }
+        }
+        
+        // Запускаем анимацию с небольшой задержкой для каждого бара
+        setTimeout(() => {
+          startTime = Date.now();
+          requestAnimationFrame(animate);
+        }, Math.random() * 400); // Случайная задержка для эффекта каскада
+      });
+    }
+
+    // Анимация чисел с улучшенным эффектом
+    function animateNumbers() {
+      const statNumbers = document.querySelectorAll('.stat-number');
+      statNumbers.forEach(stat => {
+        const text = stat.textContent;
+        if (text.includes('ч')) {
+          const number = parseInt(text.replace('ч', '').replace(/,/g, ''));
+          if (!isNaN(number)) {
+            animateValue(stat, 0, number, 2000, 'ч');
+          }
+        } else if (!isNaN(parseInt(text.replace(',', '')))) {
+          const number = parseInt(text.replace(',', ''));
+          animateValue(stat, 0, number, 2000);
+        }
+      });
+    }
+
+    function animateValue(element, start, end, duration, suffix = '') {
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const easedProgress = 1 - Math.pow(1 - progress, 3); // Кубическое easing
+        const value = Math.floor(easedProgress * (end - start) + start);
+        
+        if (suffix === 'ч') {
+          element.textContent = `${value.toLocaleString('ru-RU')}${suffix}`;
+        } else {
+          element.textContent = value.toLocaleString('ru-RU');
+        }
+        
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    // Анимация при скролле
+    function setupScrollAnimations() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            
+            // Анимация прогресс-баров ТОЛЬКО для секции статистики
+            if (entry.target.id === 'stats') {
+              // Даем небольшую задержку для лучшего визуального эффекта
+              setTimeout(animateProgressBars, 500);
+            }
+          }
+        });
+      }, { 
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+      });
+
+      document.querySelectorAll('.animate-in').forEach(el => {
+        observer.observe(el);
+      });
+    }
+
+    // Обновление навигации при скролле
+    function setupScrollNavigation() {
+      const sections = document.querySelectorAll('.section, .profile-header');
+      const navDots = document.querySelectorAll('.nav-dot');
+      const backToTop = document.getElementById('backToTop');
+
+      function updateNavigation() {
+        let current = '';
+        
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.clientHeight;
+          if (window.scrollY >= (sectionTop - sectionHeight / 3)) {
+            current = section.getAttribute('id') || 'profile';
+          }
+        });
+
+        navDots.forEach(dot => {
+          dot.classList.remove('active');
+          if (dot.getAttribute('data-tooltip') === getSectionName(current)) {
+            dot.classList.add('active');
+          }
+        });
+
+        // Показать/скрыть кнопку возврата
+        if (window.scrollY > 500) {
+          backToTop.style.display = 'flex';
+          setTimeout(() => backToTop.classList.add('visible'), 10);
+        } else {
+          backToTop.classList.remove('visible');
+          setTimeout(() => {
+            if (!backToTop.classList.contains('visible')) {
+              backToTop.style.display = 'none';
+            }
+          }, 300);
+        }
+      }
+
+      function getSectionName(id) {
+        const names = {
+          'profile': 'Главная',
+          'about': 'Обо мне',
+          'stats': 'Статистика',
+          'interests': 'Интересы',
+          'contacts': 'Контакты',
+          'time': 'Время'
+        };
+        return names[id] || 'Главная';
+      }
+
+      window.addEventListener('scroll', updateNavigation);
+      updateNavigation(); // Initial call
+    }
+
+    // Прокрутка к секции
+    function scrollToSection(sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+
+    // Эффект параллакса для частиц
+    function setupParallax() {
+      window.addEventListener('mousemove', (e) => {
+        const particles = document.querySelectorAll('.particle');
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+        
+        particles.forEach(particle => {
+          const speed = parseFloat(particle.style.animationDuration) || 20;
+          const moveX = (x - 0.5) * 100;
+          const moveY = (y - 0.5) * 100;
+          
+          particle.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+      });
+    }
+
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', () => {
+      createParticles();
+      updateTime();
+      setInterval(updateTime, 1000);
+      
+      setupScrollAnimations();
+      setupScrollNavigation();
+      setupParallax();
+      
+      // Анимация с задержкой для лучшего восприятия
+      setTimeout(() => {
+        animateNumbers();
+        
+        // Запускаем анимацию прогресс-баров с задержкой
+        setTimeout(() => {
+          animateProgressBars();
+        }, 1000);
+      }, 800);
+      
+      // Кнопка возврата наверх
+      document.getElementById('backToTop').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      
+      // Плавная прокрутка для всех внутренних ссылок
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          if (targetId === '#') return;
+          
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            targetElement.scrollIntoView({ 
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+    });
+
+    // Эффект наведения на карточки
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.info-card, .game-card, .contact-card');
+      
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          card.style.zIndex = '100';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+          setTimeout(() => {
+            card.style.zIndex = '';
+          }, 300);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
