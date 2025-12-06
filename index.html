@@ -20,6 +20,7 @@
       --binding: #673ab7;
       --anime-pink: #ff6b8b;
       --online-green: #10b981;
+      --spotify-green: #1DB954;
       
       /* Градиенты */
       --gradient-primary: linear-gradient(135deg, #6366f1, #8b5cf6);
@@ -946,6 +947,198 @@
       line-height: 1.5;
     }
 
+    /* Стили для музыкального виджета */
+    .music-player-container {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .player-card {
+      background: linear-gradient(135deg, rgba(29, 185, 84, 0.15), rgba(30, 215, 96, 0.05));
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(29, 185, 84, 0.3);
+      backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .player-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(29, 185, 84, 0.2);
+    }
+
+    .vinyl-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 30px;
+    }
+
+    .vinyl-disc {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #111 0%, #000 70%);
+      position: relative;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+      border: 2px solid #333;
+      animation: rotate 20s linear infinite;
+      animation-play-state: paused;
+    }
+
+    .vinyl-disc.playing {
+      animation-play-state: running;
+    }
+
+    .vinyl-disc::before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 15px;
+      bottom: 15px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
+    }
+
+    .vinyl-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--spotify-green);
+      border: 5px solid var(--dark);
+      z-index: 2;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .track-info {
+      text-align: center;
+    }
+
+    .track-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .track-artist {
+      font-size: 1.1rem;
+      color: var(--gray);
+      margin-bottom: 15px;
+    }
+
+    .track-album {
+      font-size: 0.9rem;
+      color: var(--spotify-green);
+      margin-bottom: 20px;
+    }
+
+    .music-progress {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+
+    .music-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--spotify-green), #1ed760);
+      border-radius: 3px;
+      position: relative;
+      transition: width 1s linear;
+    }
+
+    .music-progress-bar::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -3px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 0 15px var(--spotify-green);
+    }
+
+    .track-time {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--gray);
+      margin-top: 8px;
+    }
+
+    .player-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+      margin-top: 25px;
+    }
+
+    .control-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .control-btn:hover {
+      background: rgba(29, 185, 84, 0.3);
+      transform: scale(1.1);
+    }
+
+    .play-btn {
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, var(--spotify-green), #1ed760);
+    }
+
+    .auth-btn {
+      background: linear-gradient(135deg, var(--spotify-green), #1ed760);
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .auth-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(29, 185, 84, 0.4);
+    }
+
     /* Временная секция */
     .time-section {
       background: linear-gradient(135deg, 
@@ -1080,6 +1273,29 @@
       .games-grid {
         grid-template-columns: 1fr;
       }
+      
+      .vinyl-container {
+        width: 120px;
+        height: 120px;
+      }
+      
+      .track-title {
+        font-size: 1.3rem;
+      }
+      
+      .player-controls {
+        gap: 15px;
+      }
+      
+      .control-btn {
+        width: 45px;
+        height: 45px;
+      }
+      
+      .play-btn {
+        width: 55px;
+        height: 55px;
+      }
     }
 
     @media (max-width: 768px) {
@@ -1151,6 +1367,19 @@
         right: 20px;
         border-radius: 15px;
       }
+      
+      .player-card {
+        padding: 20px;
+      }
+      
+      .vinyl-container {
+        width: 100px;
+        height: 100px;
+      }
+      
+      .track-title {
+        font-size: 1.1rem;
+      }
     }
 
     @media (max-width: 480px) {
@@ -1207,6 +1436,21 @@
       .info-grid {
         grid-template-columns: 1fr;
       }
+      
+      .player-controls {
+        gap: 10px;
+      }
+      
+      .control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+      
+      .play-btn {
+        width: 50px;
+        height: 50px;
+      }
     }
   </style>
 </head>
@@ -1220,6 +1464,7 @@
     <div class="nav-dot" data-tooltip="Обо мне" onclick="scrollToSection('about')"></div>
     <div class="nav-dot" data-tooltip="Статистика" onclick="scrollToSection('stats')"></div>
     <div class="nav-dot" data-tooltip="Интересы" onclick="scrollToSection('interests')"></div>
+    <div class="nav-dot" data-tooltip="Музыка" onclick="scrollToSection('music')"></div>
     <div class="nav-dot" data-tooltip="Контакты" onclick="scrollToSection('contacts')"></div>
   </div>
   
@@ -1578,6 +1823,99 @@
       </div>
     </div>
 
+    <!-- Музыкальная секция -->
+    <div class="section animate-in" id="music" 
+         style="--section-color: var(--spotify-green); --section-rgb: 29, 185, 84;">
+      <div class="section-header">
+        <div class="section-icon">
+          <i class="fab fa-spotify"></i>
+        </div>
+        <h2 class="section-title">Сейчас слушаю</h2>
+      </div>
+      
+      <!-- Spotify Виджет -->
+      <div id="spotify-widget-container">
+        <div class="spotify-widget" id="spotifyWidget">
+          <!-- Контент загрузится через JavaScript -->
+          <div style="text-align: center; padding: 40px;">
+            <div style="width: 100px; height: 100px; border-radius: 50%; 
+                        background: rgba(29, 185, 84, 0.1); display: flex; 
+                        align-items: center; justify-content: center; margin: 0 auto 25px;
+                        border: 3px solid rgba(29, 185, 84, 0.3);">
+              <i class="fas fa-spinner fa-spin" style="font-size: 2.5rem; color: #1DB954;"></i>
+            </div>
+            <h3 style="color: var(--light); margin-bottom: 15px; font-size: 1.5rem;">
+              Загружаем музыку...
+            </h3>
+            <p style="color: var(--gray); margin-bottom: 25px;">
+              Подключаемся к Spotify...
+            </p>
+          </div>
+        </div>
+        
+        <!-- Кнопка авторизации -->
+        <div id="authButton" style="text-align: center; margin-top: 20px; display: none;">
+          <button id="connectSpotify" class="auth-btn">
+            <i class="fab fa-spotify"></i> Подключить Spotify
+          </button>
+        </div>
+        
+        <!-- Сообщение об ошибке -->
+        <div id="spotifyError" style="display: none; text-align: center; color: #f44336; margin-top: 15px;"></div>
+      </div>
+      
+      <!-- Статистика -->
+      <div class="music-stats" style="margin-top: 30px;">
+        <h3 style="color: var(--light); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-chart-line" style="color: #1DB954;"></i>
+          Моя музыкальная статистика
+        </h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+          <div class="stat-box" style="background: rgba(29, 185, 84, 0.1); padding: 20px; border-radius: 15px; border-left: 4px solid #1DB954;">
+            <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 8px;">Часов в неделю</div>
+            <div style="font-size: 2rem; font-weight: 800; color: #1DB954;">35+</div>
+          </div>
+          
+          <div class="stat-box" style="background: rgba(29, 185, 84, 0.1); padding: 20px; border-radius: 15px; border-left: 4px solid #1DB954;">
+            <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 8px;">Любимый жанр</div>
+            <div style="font-size: 1.3rem; font-weight: 700; color: #1DB954;">Lo-fi / Электроника</div>
+          </div>
+          
+          <div class="stat-box" style="background: rgba(29, 185, 84, 0.1); padding: 20px; border-radius: 15px; border-left: 4px solid #1DB954;">
+            <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 8px;">Слушаю во время</div>
+            <div style="font-size: 1rem; color: white;">Программирование, игры</div>
+          </div>
+        </div>
+        
+        <!-- Плейлисты -->
+        <div style="margin-top: 30px;">
+          <h3 style="color: var(--light); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-headphones" style="color: #1DB954;"></i>
+            Рекомендую послушать
+          </h3>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div style="background: rgba(29, 185, 84, 0.1); border-radius: 15px; padding: 20px; border: 1px solid rgba(29, 185, 84, 0.3);">
+              <div style="font-weight: 600; color: white; margin-bottom: 10px;">Для программирования</div>
+              <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 15px;">Lo-fi, ambient, инструментальная</div>
+              <div style="font-size: 0.85rem; color: #1DB954;">
+                <i class="fab fa-spotify"></i> Focus Flow • Gaming Energy • Chill Vibes
+              </div>
+            </div>
+            
+            <div style="background: rgba(29, 185, 84, 0.1); border-radius: 15px; padding: 20px; border: 1px solid rgba(29, 185, 84, 0.3);">
+              <div style="font-weight: 600; color: white; margin-bottom: 10px;">Для игр</div>
+              <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 15px;">Электроника, саундтреки, эпическая музыка</div>
+              <div style="font-size: 0.85rem; color: #1DB954;">
+                <i class="fab fa-spotify"></i> Game Soundtracks • Epic Gaming • Synthwave
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Контакты -->
     <div class="section animate-in" id="contacts" 
          style="--section-color: var(--primary-dark); --section-rgb: 79, 70, 229;">
@@ -1814,7 +2152,13 @@
 
         navDots.forEach(dot => {
           dot.classList.remove('active');
-          if (dot.getAttribute('data-tooltip') === getSectionName(current)) {
+          const tooltip = dot.getAttribute('data-tooltip');
+          if ((current === 'profile' && tooltip === 'Главная') ||
+              (current === 'about' && tooltip === 'Обо мне') ||
+              (current === 'stats' && tooltip === 'Статистика') ||
+              (current === 'interests' && tooltip === 'Интересы') ||
+              (current === 'music' && tooltip === 'Музыка') ||
+              (current === 'contacts' && tooltip === 'Контакты')) {
             dot.classList.add('active');
           }
         });
@@ -1831,18 +2175,6 @@
             }
           }, 300);
         }
-      }
-
-      function getSectionName(id) {
-        const names = {
-          'profile': 'Главная',
-          'about': 'Обо мне',
-          'stats': 'Статистика',
-          'interests': 'Интересы',
-          'contacts': 'Контакты',
-          'time': 'Время'
-        };
-        return names[id] || 'Главная';
       }
 
       window.addEventListener('scroll', updateNavigation);
@@ -1877,6 +2209,374 @@
       });
     }
 
+    // Spotify Widget
+    class SpotifyWidget {
+      constructor() {
+        this.clientId = '209da4128ee34c11a3b2bbc29f60816f';
+        this.redirectUri = 'https://snakezshotz.github.io/snakezshotz/';
+        this.scopes = [
+          'user-read-currently-playing',
+          'user-read-recently-played',
+          'user-top-read'
+        ].join(' ');
+        this.accessToken = null;
+        this.refreshToken = null;
+        this.tokenExpiry = null;
+        this.currentTrack = null;
+        this.isPlaying = false;
+        this.updateInterval = null;
+        
+        this.init();
+      }
+      
+      init() {
+        this.loadTokens();
+        this.setupEventListeners();
+        
+        // Проверяем токен в URL (после редиректа)
+        if (this.handleAuthCallback()) {
+          // Токен получен из URL
+          this.updateNowPlaying();
+          this.startAutoUpdate();
+        } else if (this.accessToken) {
+          // Токен есть в localStorage
+          this.updateNowPlaying();
+          this.startAutoUpdate();
+        } else {
+          // Нет токена, показываем кнопку авторизации
+          this.showAuthButton();
+        }
+      }
+      
+      loadTokens() {
+        this.accessToken = localStorage.getItem('spotify_access_token');
+        this.refreshToken = localStorage.getItem('spotify_refresh_token');
+        this.tokenExpiry = localStorage.getItem('spotify_token_expiry');
+      }
+      
+      saveTokens() {
+        if (this.accessToken) {
+          localStorage.setItem('spotify_access_token', this.accessToken);
+        }
+        if (this.refreshToken) {
+          localStorage.setItem('spotify_refresh_token', this.refreshToken);
+        }
+        if (this.tokenExpiry) {
+          localStorage.setItem('spotify_token_expiry', this.tokenExpiry);
+        }
+      }
+      
+      clearTokens() {
+        localStorage.removeItem('spotify_access_token');
+        localStorage.removeItem('spotify_refresh_token');
+        localStorage.removeItem('spotify_token_expiry');
+        this.accessToken = null;
+        this.refreshToken = null;
+        this.tokenExpiry = null;
+      }
+      
+      isTokenExpired() {
+        if (!this.tokenExpiry) return true;
+        return Date.now() > parseInt(this.tokenExpiry);
+      }
+      
+      authorize() {
+        const params = new URLSearchParams({
+          client_id: this.clientId,
+          response_type: 'token',
+          redirect_uri: this.redirectUri,
+          scope: this.scopes,
+          show_dialog: true
+        });
+        
+        window.location.href = `https://accounts.spotify.com/authorize?${params}`;
+      }
+      
+      handleAuthCallback() {
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+        
+        if (params.has('access_token')) {
+          this.accessToken = params.get('access_token');
+          
+          // Сохраняем время истечения токена (1 час)
+          const expiresIn = params.get('expires_in') || 3600;
+          this.tokenExpiry = Date.now() + (expiresIn * 1000);
+          
+          this.saveTokens();
+          
+          // Очищаем URL от токенов
+          window.history.replaceState({}, document.title, window.location.pathname);
+          
+          // Прячем кнопку авторизации
+          this.hideAuthButton();
+          
+          return true;
+        }
+        
+        return false;
+      }
+      
+      async getNowPlaying() {
+        if (!this.accessToken || this.isTokenExpired()) {
+          await this.refreshAccessToken();
+        }
+        
+        try {
+          const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+            headers: {
+              'Authorization': `Bearer ${this.accessToken}`
+            }
+          });
+          
+          if (response.status === 200) {
+            const data = await response.json();
+            this.currentTrack = data;
+            this.isPlaying = data.is_playing;
+            return data;
+          } else if (response.status === 204) {
+            // Ничего не играет
+            return await this.getRecentlyPlayed();
+          }
+        } catch (error) {
+          console.error('Error fetching now playing:', error);
+          return null;
+        }
+      }
+      
+      async getRecentlyPlayed() {
+        try {
+          const response = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=1', {
+            headers: {
+              'Authorization': `Bearer ${this.accessToken}`
+            }
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            if (data.items.length > 0) {
+              return {
+                item: data.items[0].track,
+                is_playing: false,
+                progress_ms: 0
+              };
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching recently played:', error);
+        }
+        
+        return null;
+      }
+      
+      async refreshAccessToken() {
+        // Для фронтенда используем re-authorization
+        this.clearTokens();
+        this.authorize();
+      }
+      
+      formatTime(ms) {
+        if (!ms || ms === 0) return '0:00';
+        
+        const minutes = Math.floor(ms / 60000);
+        const seconds = ((ms % 60000) / 1000).toFixed(0);
+        return `${minutes}:${seconds.padStart(2, '0')}`;
+      }
+      
+      renderNowPlaying(trackData) {
+        if (!trackData || !trackData.item) {
+          return this.renderNoTrack();
+        }
+        
+        const track = trackData.item;
+        const progress = trackData.progress_ms || 0;
+        const duration = track.duration_ms;
+        const progressPercent = duration > 0 ? (progress / duration) * 100 : 0;
+        const isPlaying = trackData.is_playing || false;
+        
+        return `
+          <div class="player-card">
+            <!-- Вращающийся винил -->
+            <div class="vinyl-container">
+              <div class="vinyl-disc ${isPlaying ? 'playing' : ''}">
+                <div class="vinyl-center"></div>
+              </div>
+            </div>
+            
+            <!-- Информация о треке -->
+            <div class="track-info">
+              <div class="track-title" title="${track.name}">
+                ${track.name}
+              </div>
+              <div class="track-artist">
+                ${track.artists.map(artist => artist.name).join(', ')}
+              </div>
+              <div class="track-album">
+                ${track.album.name} • ${isPlaying ? 'Сейчас играет' : 'Недавно играло'}
+              </div>
+              
+              <!-- Прогресс-бар -->
+              <div class="music-progress">
+                <div class="music-progress-bar" style="width: ${progressPercent}%"></div>
+              </div>
+              
+              <div class="track-time">
+                <span>${this.formatTime(progress)}</span>
+                <span>${this.formatTime(duration)}</span>
+              </div>
+            </div>
+            
+            <!-- Контролы -->
+            <div class="player-controls">
+              <button class="control-btn" onclick="spotifyWidget.skipPrevious()" title="Предыдущий">
+                <i class="fas fa-step-backward"></i>
+              </button>
+              <button class="control-btn play-btn" onclick="spotifyWidget.togglePlay()" title="${isPlaying ? 'Пауза' : 'Воспроизвести'}">
+                <i class="fas fa-${isPlaying ? 'pause' : 'play'}"></i>
+              </button>
+              <button class="control-btn" onclick="spotifyWidget.skipNext()" title="Следующий">
+                <i class="fas fa-step-forward"></i>
+              </button>
+            </div>
+            
+            <!-- Ссылка на Spotify -->
+            <div style="text-align: center; margin-top: 20px;">
+              <a href="${track.external_urls.spotify}" target="_blank" style="
+                color: #1DB954;
+                text-decoration: none;
+                font-size: 0.9rem;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+              ">
+                <i class="fab fa-spotify"></i>
+                Открыть в Spotify
+              </a>
+            </div>
+          </div>
+        `;
+      }
+      
+      renderNoTrack() {
+        return `
+          <div class="player-card" style="text-align: center; padding: 40px;">
+            <div style="width: 100px; height: 100px; border-radius: 50%; 
+                        background: rgba(29, 185, 84, 0.1); display: flex; 
+                        align-items: center; justify-content: center; margin: 0 auto 25px;
+                        border: 3px solid rgba(29, 185, 84, 0.3);">
+              <i class="fas fa-music" style="font-size: 2.5rem; color: #1DB954;"></i>
+            </div>
+            <h3 style="color: var(--light); margin-bottom: 15px; font-size: 1.5rem;">
+              Сейчас ничего не играет
+            </h3>
+            <p style="color: var(--gray); margin-bottom: 25px;">
+              Включите музыку в Spotify, чтобы она отобразилась здесь
+            </p>
+            <button onclick="spotifyWidget.authorize()" class="auth-btn">
+              <i class="fab fa-spotify"></i>
+              Подключить Spotify
+            </button>
+          </div>
+        `;
+      }
+      
+      async updateNowPlaying() {
+        try {
+          const trackData = await this.getNowPlaying();
+          const widget = document.getElementById('spotifyWidget');
+          
+          if (widget) {
+            widget.innerHTML = trackData ? this.renderNowPlaying(trackData) : this.renderNoTrack();
+          }
+          
+          // Обновляем заголовок вкладки с названием трека
+          if (trackData && trackData.item) {
+            document.title = `🎵 ${trackData.item.name} - snakezshotz`;
+          }
+          
+        } catch (error) {
+          console.error('Error updating widget:', error);
+          this.showError('Ошибка загрузки данных Spotify');
+        }
+      }
+      
+      showAuthButton() {
+        const authButton = document.getElementById('authButton');
+        if (authButton) {
+          authButton.style.display = 'block';
+        }
+      }
+      
+      hideAuthButton() {
+        const authButton = document.getElementById('authButton');
+        if (authButton) {
+          authButton.style.display = 'none';
+        }
+      }
+      
+      showError(message) {
+        const errorElement = document.getElementById('spotifyError');
+        if (errorElement) {
+          errorElement.textContent = message;
+          errorElement.style.display = 'block';
+        }
+      }
+      
+      hideError() {
+        const errorElement = document.getElementById('spotifyError');
+        if (errorElement) {
+          errorElement.style.display = 'none';
+        }
+      }
+      
+      togglePlay() {
+        if (!this.accessToken) {
+          this.authorize();
+          return;
+        }
+        
+        // В реальном приложении здесь будет API call к Spotify
+        alert('Для управления воспроизведением необходимо использовать Spotify приложение');
+      }
+      
+      skipNext() {
+        alert('Используйте Spotify приложение для переключения треков');
+      }
+      
+      skipPrevious() {
+        alert('Используйте Spotify приложение для переключения треков');
+      }
+      
+      startAutoUpdate() {
+        // Обновляем каждые 30 секунд
+        this.updateInterval = setInterval(() => {
+          this.updateNowPlaying();
+        }, 30000);
+      }
+      
+      stopAutoUpdate() {
+        if (this.updateInterval) {
+          clearInterval(this.updateInterval);
+          this.updateInterval = null;
+        }
+      }
+      
+      setupEventListeners() {
+        // Кнопка подключения Spotify
+        const connectBtn = document.getElementById('connectSpotify');
+        if (connectBtn) {
+          connectBtn.addEventListener('click', () => this.authorize());
+        }
+        
+        // Обработка видимости страницы
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) {
+            this.updateNowPlaying();
+          }
+        });
+      }
+    }
+
     // Инициализация
     document.addEventListener('DOMContentLoaded', () => {
       createParticles();
@@ -1896,6 +2596,9 @@
           animateProgressBars();
         }, 1000);
       }, 800);
+      
+      // Инициализация Spotify виджета
+      window.spotifyWidget = new SpotifyWidget();
       
       // Кнопка возврата наверх
       document.getElementById('backToTop').addEventListener('click', (e) => {
